@@ -1,2 +1,3 @@
-export * from './dom';
-export * from './xslt';
+export * from './install';
+export { XSLTProcessorImpl as XSLTProcessor } from './xslt-processor';
+export * from './api';

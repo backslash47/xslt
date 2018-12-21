@@ -1,106 +1,6 @@
-import { XPathEvaluator, convertValue } from 'xpath-ts';
+import { XSLTContext } from '../xslt-context';
 
 // tslint:disable:prefer-for-of
-
-export type Variable = string | number | boolean | Node | Node[];
-
-export interface Options {
-  node: Node;
-  position?: number;
-  nodeList?: Node[];
-  parent?: XSLTContext;
-  returnOnFirstMatch?: boolean;
-  caseInsensitive?: boolean;
-}
-
-export class XSLTContext {
-  node: Node;
-  nodeList: Node[];
-  position: number;
-  parent?: XSLTContext;
-  variables: Map<string, Variable>;
-  returnOnFirstMatch: boolean;
-  caseInsensitive: boolean;
-
-  constructor({
-    node,
-    position = 0,
-    nodeList = [node],
-    parent,
-    returnOnFirstMatch = false,
-    caseInsensitive = false
-  }: Options) {
-    this.node = node;
-    this.parent = parent;
-    this.nodeList = nodeList;
-    this.position = position;
-    this.variables = new Map();
-    this.returnOnFirstMatch = returnOnFirstMatch;
-    this.caseInsensitive = caseInsensitive;
-  }
-
-  clone(node: Node = this.node, position: number = this.position, nodeList: Node[] = this.nodeList) {
-    return new XSLTContext({
-      node,
-      position,
-      nodeList,
-      parent: this
-    });
-  }
-
-  contextSize() {
-    return this.nodeList.length;
-  }
-
-  setVariable(name: string, value: Variable) {
-    this.variables.set(name, value);
-  }
-
-  getVariable(name: string): Variable | undefined {
-    const value = this.variables.get(name);
-
-    if (value !== undefined) {
-      return value;
-    } else if (this.parent !== undefined) {
-      return this.parent.getVariable(name);
-    } else {
-      return undefined;
-    }
-  }
-
-  eval(select: string, type: number = 0) {
-    const evaluator = new XPathEvaluator({
-      vr: {
-        getVariable: (ln) => {
-          const val = this.getVariable(ln);
-
-          if (val === undefined) {
-            return null;
-          } else {
-            return convertValue(val);
-          }
-        }
-      }
-    });
-
-    const result = evaluator.evaluate(select, this.node, null, type, null);
-
-    return result;
-  }
-
-  setNode(position: number) {
-    this.node = this.nodeList[position];
-    this.position = position;
-  }
-
-  setReturnOnFirstMatch(returnOnFirstMatch: boolean) {
-    this.returnOnFirstMatch = returnOnFirstMatch;
-  }
-
-  setCaseInsensitive(caseInsensitive: boolean) {
-    this.caseInsensitive = caseInsensitive;
-  }
-}
 
 export function convertResult(result: XPathResult) {
   const type = result.resultType;
@@ -143,25 +43,25 @@ export function gatherNodes(result: XPathResult) {
   return nodes;
 }
 
-export interface XSLTSort {
+export interface XPathSort {
   expr: string;
   type: string;
   order: string;
 }
 
-interface XSLTSortItem {
+interface XPathSortItem {
   node: Node;
-  key: XSLTSortItemKey[];
+  key: XPathSortItemKey[];
 }
 
-interface XSLTSortItemKey {
+interface XPathSortItemKey {
   value: string | number;
   order: string;
 }
 
 // Utility function to sort a list of nodes. Used by xsltSort() and
 // nxslSelect().
-export function xpathSort(input: XSLTContext, sort: XSLTSort[]) {
+export function xpathSort(input: XSLTContext, sort: XPathSort[]) {
   if (sort.length === 0) {
     return;
   }
@@ -170,7 +70,7 @@ export function xpathSort(input: XSLTContext, sort: XSLTSort[]) {
 
   for (let i = 0; i < input.contextSize(); ++i) {
     const node = input.nodeList[i];
-    const sortitem: XSLTSortItem = {
+    const sortitem: XPathSortItem = {
       node,
       key: []
     };
@@ -222,7 +122,7 @@ export function xpathSort(input: XSLTContext, sort: XSLTSort[]) {
 // NOTE: In browsers which do not follow the spec, this breaks only in
 // the case that numbers should be sorted as strings, which is very
 // uncommon.
-function xpathSortByKey(v1: XSLTSortItem, v2: XSLTSortItem) {
+function xpathSortByKey(v1: XPathSortItem, v2: XPathSortItem) {
   // NOTE: Sort key vectors of different length never occur in
   // xsltSort.
 

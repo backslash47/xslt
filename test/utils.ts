@@ -1,4 +1,4 @@
-import { getParser } from '../src/dom';
+import { getParser } from '../src/install';
 
 export function xmlParse(xml: string) {
   const parser = getParser();

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { xsltProcess } from '../src/xslt';
+import { xsltProcess } from '../src/api';
 import { xmlParse } from './utils';
 
 // tslint:disable:max-line-length

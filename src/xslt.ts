@@ -1,5 +1,4 @@
 import * as he from 'he';
-import { getDom } from './dom';
 import {
   domAppendChild,
   domCreateCDATASection,
@@ -9,7 +8,7 @@ import {
   domCreateTextNode,
   domGetAttribute,
   domSetAttribute
-} from './utils/dom-helper';
+} from './utils/dom';
 import {
   isAttribute,
   isCData,
@@ -20,23 +19,11 @@ import {
   isProcessingInstruction,
   isText
 } from './utils/types';
-import { xmlOwnerDocument, xmlText, xmlValue } from './utils/xml-helper';
-import { convertResult, gatherNodes, isResultNodeSet, xpathSort, XSLTContext } from './utils/xpath';
+import { xmlOwnerDocument, xmlValue } from './utils/xml';
+import { convertResult, gatherNodes, isResultNodeSet, xpathSort, XPathSort } from './utils/xpath';
+import { XSLTContext } from './xslt-context';
 
 // tslint:disable:prefer-for-of
-
-// The exported entry point of the XSL-T processor, as explained
-// above.
-//
-// @param xmlDoc The input document root, as DOM node.
-// @param template The stylesheet document root, as DOM node.
-// @return the processed document, as XML text in a string.
-export function xsltProcess(xmlDoc: Node, stylesheet: Document) {
-  const output = domCreateDocumentFragment(getDom().createDocument(null, null, null));
-  xsltProcessContext(new XSLTContext({ node: xmlDoc }), stylesheet, output);
-  const ret = xmlText(output);
-  return ret;
-}
 
 // The main entry point of the XSL-T processor, as explained above.
 //
@@ -44,7 +31,7 @@ export function xsltProcess(xmlDoc: Node, stylesheet: Document) {
 // @param template The stylesheet document root, as DOM node.
 // @param the root of the generated output, as DOM node.
 
-function xsltProcessContext(input: XSLTContext, template: Node, output: Node) {
+export function xsltProcessContext(input: XSLTContext, template: Node, output: Node) {
   const outputDocument = xmlOwnerDocument(output);
 
   const nodename = template.nodeName.split(/:/);
@@ -302,7 +289,7 @@ function xsltWithParam(input: XSLTContext, template: Node) {
 // TODO(mesch): case-order is not implemented.
 
 function xsltSort(input: XSLTContext, template: Node) {
-  const sort = [];
+  const sort: XPathSort[] = [];
 
   for (const c of Array.from(template.childNodes)) {
     if (isElement(c) && c.nodeName === 'xsl:sort') {

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { xmlText } from '../src/utils/xml-helper';
+import { xmlText } from '../src/utils/xml';
 import { xmlParse } from './utils';
 // tslint:disable:max-line-length
 // tslint:disable:quotemark

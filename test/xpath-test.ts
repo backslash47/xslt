@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 import { XPathEvaluator } from 'xpath-ts';
-import { xmlValue } from '../src/utils/xml-helper';
-import { gatherNodes, XSLTContext } from '../src/utils/xpath';
+import { xmlValue } from '../src/utils/xml';
+import { gatherNodes } from '../src/utils/xpath';
+import { XSLTContext } from '../src/xslt-context';
 import { xmlParse } from './utils';
 
 // tslint:disable:max-line-length

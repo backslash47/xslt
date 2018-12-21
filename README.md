@@ -43,6 +43,22 @@ install(new DOMParser(), new XMLSerializer(), new DOMImplementation());
 const outXmlString = xsltProcess(xmlParse(xmlString), xmlParse(xsltString));
 ```
 
+## another type of usage:
+
+```typescript
+import { DOMImplementation, DOMParser, XMLSerializer } from 'xmldom';
+import { install, XSLTProcessor } from 'xslt-ts';
+
+// xmlString: string of xml file contents
+// xsltString: string of xslt file contents
+// output: output DOM model
+install(new DOMParser(), new XMLSerializer(), new DOMImplementation());
+const processor = new XSLTProcessorImpl();
+
+processor.importStylesheet(xmlParse(xsltString));
+const output = processor.transformToDocument(xmlParse(xmlString));
+```
+
 ## Introduction
 
 This library contains an implementation of XSLT in TypeScript. Because XSLT uses
