@@ -39,6 +39,7 @@ export class XSLTProcessorImpl implements XSLTProcessor {
     const context = new XSLTContext({ node: source, rootNode: source, variables: this.variables });
     xsltProcessContext(context, this.stylesheet, fragment);
 
+    output.appendChild(fragment);
     return output;
   }
   transformToFragment(source: Node, document: Document): DocumentFragment {
