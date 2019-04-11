@@ -68,7 +68,7 @@ export function xsltProcessContext(input: XSLTContext, template: Node, output: N
           nodes = Array.from(input.node.childNodes);
         }
 
-        const sortContext = input.clone(nodes[0], 0, nodes);
+        const sortContext = input.clone(nodes[0], input.rootNode, 0, nodes);
         xsltWithParam(sortContext, template);
         xsltSort(sortContext, template);
 
@@ -84,7 +84,7 @@ export function xsltProcessContext(input: XSLTContext, template: Node, output: N
         for (let j = 0; j < sortContext.contextSize(); ++j) {
           const nj = sortContext.nodeList[j];
           for (let i = 0; i < templates.length; ++i) {
-            xsltProcessContext(sortContext.clone(nj, j), templates[i], output);
+            xsltProcessContext(sortContext.clone(nj, sortContext.rootNode, j), templates[i], output);
           }
         }
         break;
@@ -362,11 +362,11 @@ function xsltChoose(input: XSLTContext, template: Node, output: Node) {
 function xsltForEach(input: XSLTContext, template: Node, output: Node) {
   const select = xmlGetAttribute(template, 'select');
   const nodes = gatherNodes(input.eval(select));
-  const sortContext = input.clone(nodes[0], 0, nodes);
+  const sortContext = input.clone(nodes[0], input.rootNode, 0, nodes);
   xsltSort(sortContext, template);
   for (let i = 0; i < sortContext.contextSize(); ++i) {
     const ni = sortContext.nodeList[i];
-    xsltChildNodes(sortContext.clone(ni, i), template, output);
+    xsltChildNodes(sortContext.clone(ni, input.rootNode, i), template, output);
   }
 }
 
@@ -572,7 +572,7 @@ function xsltMatch(match: string, context: XSLTContext) {
   let node: Node | null = context.node;
 
   while (!ret && node) {
-    const cloned = context.clone(node, 0, [node]);
+    const cloned = context.clone(node, context.rootNode, 0, [node]);
     const result = gatherNodes(cloned.eval(match));
     for (let i = 0; i < result.length; ++i) {
       if (result[i] === context.node) {

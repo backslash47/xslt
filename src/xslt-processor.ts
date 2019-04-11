@@ -36,7 +36,7 @@ export class XSLTProcessorImpl implements XSLTProcessor {
 
     const output = getDom().createDocument(null, null, null);
     const fragment = domCreateDocumentFragment(output);
-    const context = new XSLTContext({ node: source, variables: this.variables });
+    const context = new XSLTContext({ node: source, rootNode: source, variables: this.variables });
     xsltProcessContext(context, this.stylesheet, fragment);
 
     return output;
@@ -47,7 +47,7 @@ export class XSLTProcessorImpl implements XSLTProcessor {
     }
 
     const output = domCreateDocumentFragment(document);
-    const context = new XSLTContext({ node: source, variables: this.variables });
+    const context = new XSLTContext({ node: source, rootNode: source, variables: this.variables });
     xsltProcessContext(context, this.stylesheet, output);
 
     return output;

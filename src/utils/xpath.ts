@@ -74,7 +74,7 @@ export function xpathSort(input: XSLTContext, sort: XPathSort[]) {
       node,
       key: []
     };
-    const context = input.clone(node, 0, [node]);
+    const context = input.clone(node, input.rootNode, 0, [node]);
 
     for (const s of sort) {
       const value = context.eval(s.expr);

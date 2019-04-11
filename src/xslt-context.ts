@@ -4,6 +4,7 @@ export type Variable = string | number | boolean | Node | Node[];
 
 export interface Options {
   node: Node;
+  rootNode: Node;
   position?: number;
   nodeList?: Node[];
   parent?: XSLTContext;
@@ -14,6 +15,7 @@ export interface Options {
 
 export class XSLTContext {
   node: Node;
+  rootNode: Node;
   nodeList: Node[];
   position: number;
   parent?: XSLTContext;
@@ -23,6 +25,7 @@ export class XSLTContext {
 
   constructor({
     node,
+    rootNode,
     position = 0,
     nodeList = [node],
     parent,
@@ -31,6 +34,7 @@ export class XSLTContext {
     variables = new Map()
   }: Options) {
     this.node = node;
+    this.rootNode = rootNode;
     this.parent = parent;
     this.nodeList = nodeList;
     this.position = position;
@@ -39,9 +43,15 @@ export class XSLTContext {
     this.caseInsensitive = caseInsensitive;
   }
 
-  clone(node: Node = this.node, position: number = this.position, nodeList: Node[] = this.nodeList) {
+  clone(
+    node: Node = this.node,
+    rootNode: Node = this.rootNode,
+    position: number = this.position,
+    nodeList: Node[] = this.nodeList
+  ) {
     return new XSLTContext({
       node,
+      rootNode,
       position,
       nodeList,
       parent: this
@@ -83,8 +93,10 @@ export class XSLTContext {
       }
     });
 
-    const result = evaluator.evaluate(select, this.node, null, type, null);
+    const expression = evaluator.createExpression(select, null);
+    expression.context.virtualRoot = this.rootNode;
 
+    const result = expression.evaluate(this.node, type, null);
     return result;
   }
 
