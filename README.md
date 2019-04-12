@@ -4,7 +4,7 @@ XSLT 1.0 implementation for browser and Node.js environment based on [xpath-ts](
 
 ## Requirements
 
-- [Node v10.x or greater](https://nodejs.org/en/download/)
+- [Node v11.x or greater](https://nodejs.org/en/download/)
 
 ## Release Notes
 
