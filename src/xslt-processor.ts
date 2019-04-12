@@ -1,5 +1,6 @@
 import { getDom } from './install';
 import { domCreateDocumentFragment } from './utils/dom';
+import { isDocument } from './utils/types';
 import { xsltProcessContext } from './xslt';
 import { Variable, XSLTContext } from './xslt-context';
 
@@ -18,7 +19,11 @@ export class XSLTProcessorImpl implements XSLTProcessor {
     return this.variables.get(localName);
   }
   importStylesheet(style: Node): void {
-    this.stylesheet = style;
+    if (isDocument(style)) {
+      this.stylesheet = style.documentElement;
+    } else {
+      this.stylesheet = style;
+    }
   }
   removeParameter(_namespaceURI: string, localName: string): void {
     this.variables.delete(localName);
@@ -37,7 +42,7 @@ export class XSLTProcessorImpl implements XSLTProcessor {
     const output = getDom().createDocument(null, null, null);
     const fragment = domCreateDocumentFragment(output);
     const context = new XSLTContext({ node: source, rootNode: source, variables: this.variables });
-    xsltProcessContext(context, this.stylesheet, fragment);
+    xsltProcessContext(context, this.stylesheet, this.stylesheet, fragment);
 
     output.appendChild(fragment);
     return output;
@@ -49,7 +54,7 @@ export class XSLTProcessorImpl implements XSLTProcessor {
 
     const output = domCreateDocumentFragment(document);
     const context = new XSLTContext({ node: source, rootNode: source, variables: this.variables });
-    xsltProcessContext(context, this.stylesheet, output);
+    xsltProcessContext(context, this.stylesheet, this.stylesheet, output);
 
     return output;
   }
