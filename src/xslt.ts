@@ -379,7 +379,7 @@ function xsltChildNodes(input: XSLTContext, template: Node, templateRoot: Node, 
   // siblings of the children.
   const context = input.clone();
   for (let i = 0; i < template.childNodes.length; ++i) {
-    if (isXmlDeclaration(template.childNodes[i])) {
+    if (isXmlDeclaration(template.childNodes[i]) || isComment(template.childNodes[i])) {
       continue;
     }
     xsltProcessContext(context, template.childNodes[i], templateRoot, output);
