@@ -452,11 +452,13 @@ export function executeTests() {
     const slashPageLocationAtLat = `/${page}/${location}/@${lat}`;
     const slashPageLocationAtLon = `/${page}/${location}/@${lon}`;
 
-    const ctx = new XSLTContext({ node: xmlParse(xml) });
+    const node = xmlParse(xml);
+    const ctx = new XSLTContext({ node, rootNode: node });
     // DGF if we have access to an official DOMParser, compare output with that also
     let ctx1: XSLTContext;
     if (typeof DOMParser !== 'undefined') {
-      ctx1 = new XSLTContext({ node: new DOMParser().parseFromString(xml, 'text/xml') });
+      const node = new DOMParser().parseFromString(xml, 'text/xml');
+      ctx1 = new XSLTContext({ node, rootNode: node });
     } else {
       ctx1 = ctx;
     }
@@ -525,7 +527,7 @@ export function executeTests() {
       );
 
       for (const e of numExpr) {
-        const c = new XSLTContext({ node: bodyEl });
+        const c = new XSLTContext({ node: bodyEl, rootNode: bodyEl });
         c.setCaseInsensitive(true);
         if (e[2]) {
           // tslint:disable-next-line:forin
@@ -597,7 +599,8 @@ export function executeTests() {
         ' <f></f>',
         '</page>'
       ].join('');
-      const c = new XSLTContext({ node: xmlParse(xml) });
+      const node = xmlParse(xml);
+      const c = new XSLTContext({ node, rootNode: node });
 
       for (const e of axisTests) {
         const result = c.eval(e[0]);
@@ -612,7 +615,8 @@ export function executeTests() {
     });
 
     it('can handle attribute asterisk', () => {
-      const c = new XSLTContext({ node: xmlParse('<x a="1" b="1"><y><z></z></y></x>') });
+      const node = xmlParse('<x a="1" b="1"><y><z></z></y></x>');
+      const c = new XSLTContext({ node, rootNode: node });
       const result = c.eval('count(/x/@*)');
       expect(result.numberValue).to.equal(2);
     });
@@ -709,7 +713,7 @@ export function executeTests() {
       ];
 
       const parsedXML = xmlParse(xml);
-      const ctx = new XSLTContext({ node: parsedXML });
+      const ctx = new XSLTContext({ node: parsedXML, rootNode: parsedXML });
 
       for (const test of tests) {
         const ex = test[0];
