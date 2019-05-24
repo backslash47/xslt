@@ -18,7 +18,12 @@ Install with [npm](http://github.com/isaacs/npm):
 npm install xslt-ts
 ```
 
-This library is xml engine agnostic but I recommend to use [xmldom](https://github.com/jindw/xmldom) or [jsdom](https://github.com/jsdom/jsdom)
+This library is xml engine agnostic but I recommend to use [xmldom-ts](https://github.com/backslash47/xmldom), [xmldom](https://github.com/jindw/xmldom) or [jsdom](https://github.com/jsdom/jsdom)
+
+```
+npm install xmldom-ts
+```
+or 
 
 ```
 npm install xmldom
@@ -33,26 +38,26 @@ npm install jsdom
 ## simple usage:
 
 ```typescript
-import { DOMImplementation, DOMParser, XMLSerializer } from 'xmldom';
+import { DOMImplementationImpl, DOMParserImpl, XMLSerializerImpl } from 'xmldom-ts';
 import { install, xsltProcess, xmlParse } from 'xslt-ts';
 
 // xmlString: string of xml file contents
 // xsltString: string of xslt file contents
 // outXmlString: output xml string.
-install(new DOMParser(), new XMLSerializer(), new DOMImplementation());
+install(new DOMParserImpl(), new XMLSerializerImpl(), new DOMImplementationImpl());
 const outXmlString = xsltProcess(xmlParse(xmlString), xmlParse(xsltString));
 ```
 
 ## another type of usage:
 
 ```typescript
-import { DOMImplementation, DOMParser, XMLSerializer } from 'xmldom';
+import { DOMImplementationImpl, DOMParserImpl, XMLSerializerImpl } from 'xmldom-ts';
 import { install, XSLTProcessor } from 'xslt-ts';
 
 // xmlString: string of xml file contents
 // xsltString: string of xslt file contents
 // output: output DOM model
-install(new DOMParser(), new XMLSerializer(), new DOMImplementation());
+install(new DOMParserImpl(), new XMLSerializerImpl(), new DOMImplementationImpl());
 const processor = new XSLTProcessorImpl();
 
 processor.importStylesheet(xmlParse(xsltString));
@@ -111,7 +116,7 @@ npm install
 npm run build
 ```
 
-You will get the transpiled code under '/dist' and typings under '/types'.
+You will get the transpiled code under '/dist/lib' and typings under '/dist/types'.
 
 #### Test
 
