@@ -1,4 +1,4 @@
-import { DOMImplementation, DOMParser, XMLSerializer } from 'xmldom';
+import { DOMImplementationImpl, DOMParserImpl, XMLSerializerImpl } from 'xmldom-ts';
 import { install } from '../src';
 import { executeTests as escapeTests } from './escape-test';
 import { executeTests as simpleTests } from './simple-test';
@@ -9,7 +9,7 @@ import { executeTests as xsltTests } from './xslt-test';
 
 describe('xmldom', async () => {
   before(() => {
-    install(new DOMParser(), new XMLSerializer(), new DOMImplementation());
+    install(new DOMParserImpl(), new XMLSerializerImpl(), new DOMImplementationImpl());
   });
 
   escapeTests();

@@ -19,9 +19,13 @@ export function xmlValue(node: Node, disallowBrowserSpecificOptimization: boolea
   } else if (isElement(node) || isDocument(node) || isFragment(node)) {
     if (!disallowBrowserSpecificOptimization) {
       // IE, Safari, Opera, and friends
-      const innerText = (node as any).innerText;
-      if (innerText != null) {
-        return innerText;
+      try {
+        const innerText = (node as any).innerText;
+        if (innerText != null) {
+          return innerText;
+        }
+      } catch (_e) {
+        // ignore if implemented but not supported
       }
       // Firefox
       const textContent = node.textContent;
