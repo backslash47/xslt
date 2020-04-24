@@ -52,16 +52,20 @@ const outXmlString = xsltProcess(xmlParse(xmlString), xmlParse(xsltString));
 
 ```typescript
 import { DOMImplementationImpl, DOMParserImpl, XMLSerializerImpl } from 'xmldom-ts';
-import { install, xmlParse, XSLTProcessor } from 'xslt-ts';
+import { install, XSLTProcessor } from 'xslt-ts';
 
 // xmlString: string of xml file contents
 // xsltString: string of xslt file contents
 // output: output DOM model
-install(new DOMParserImpl(), new XMLSerializerImpl(), new DOMImplementationImpl());
+const parser = new DOMParserImpl();
+const serializer = new XMLSerializerImpl();
+const dom = new DOMImplementationImpl();
+
+install(parser, serializer, dom);
 const processor = new XSLTProcessor();
 
-processor.importStylesheet(xmlParse(xsltString));
-const output = processor.transformToDocument(xmlParse(xmlString));
+processor.importStylesheet(parser.parseFromString(xsltString, 'text/xml'));
+const output = processor.transformToDocument(parser.parseFromString(xmlString, 'text/xml'));
 ```
 
 ## Introduction
