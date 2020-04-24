@@ -52,7 +52,7 @@ const outXmlString = xsltProcess(xmlParse(xmlString), xmlParse(xsltString));
 
 ```typescript
 import { DOMImplementationImpl, DOMParserImpl, XMLSerializerImpl } from 'xmldom-ts';
-import { install, XSLTProcessor } from 'xslt-ts';
+import { install, xmlParse, XSLTProcessor } from 'xslt-ts';
 
 // xmlString: string of xml file contents
 // xsltString: string of xslt file contents
