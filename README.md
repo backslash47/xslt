@@ -58,7 +58,7 @@ import { install, XSLTProcessor } from 'xslt-ts';
 // xsltString: string of xslt file contents
 // output: output DOM model
 install(new DOMParserImpl(), new XMLSerializerImpl(), new DOMImplementationImpl());
-const processor = new XSLTProcessorImpl();
+const processor = new XSLTProcessor();
 
 processor.importStylesheet(xmlParse(xsltString));
 const output = processor.transformToDocument(xmlParse(xmlString));
