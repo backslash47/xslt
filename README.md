@@ -39,14 +39,17 @@ npm install jsdom
 
 ```typescript
 import { DOMImplementationImpl, DOMParserImpl, XMLSerializerImpl } from 'xmldom-ts';
-import { install, xsltProcess, xmlParse } from 'xslt-ts';
+import { install, xsltProcess } from 'xslt-ts';
+const parser = new DOMParserImpl();
+const serializer = new XMLSerializerImpl();
+const dom = new DOMImplementationImpl();
 
-install(new DOMParserImpl(), new XMLSerializerImpl(), new DOMImplementationImpl());
+install(parser, serializer, dom);
 
 // xmlString: string of xml file contents
 // xsltString: string of xslt file contents
 // outXmlString: output xml string.
-const outXmlString = xsltProcess(xmlParse(xmlString), xmlParse(xsltString));
+const outXmlString = xsltProcess(parser.parseFromString(xmlString, 'text/xml'), parser.parseFromString(xsltString, 'text/xml'));
 ```
 
 ## another type of usage:
