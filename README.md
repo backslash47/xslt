@@ -41,10 +41,11 @@ npm install jsdom
 import { DOMImplementationImpl, DOMParserImpl, XMLSerializerImpl } from 'xmldom-ts';
 import { install, xsltProcess, xmlParse } from 'xslt-ts';
 
+install(new DOMParserImpl(), new XMLSerializerImpl(), new DOMImplementationImpl());
+
 // xmlString: string of xml file contents
 // xsltString: string of xslt file contents
 // outXmlString: output xml string.
-install(new DOMParserImpl(), new XMLSerializerImpl(), new DOMImplementationImpl());
 const outXmlString = xsltProcess(xmlParse(xmlString), xmlParse(xsltString));
 ```
 
@@ -53,10 +54,6 @@ const outXmlString = xsltProcess(xmlParse(xmlString), xmlParse(xsltString));
 ```typescript
 import { DOMImplementationImpl, DOMParserImpl, XMLSerializerImpl } from 'xmldom-ts';
 import { install, XSLTProcessor } from 'xslt-ts';
-
-// xmlString: string of xml file contents
-// xsltString: string of xslt file contents
-// output: output DOM model
 const parser = new DOMParserImpl();
 const serializer = new XMLSerializerImpl();
 const dom = new DOMImplementationImpl();
@@ -64,6 +61,9 @@ const dom = new DOMImplementationImpl();
 install(parser, serializer, dom);
 const processor = new XSLTProcessor();
 
+// xmlString: string of xml file contents
+// xsltString: string of xslt file contents
+// output: output DOM model
 processor.importStylesheet(parser.parseFromString(xsltString, 'text/xml'));
 const output = processor.transformToDocument(parser.parseFromString(xmlString, 'text/xml'));
 ```
